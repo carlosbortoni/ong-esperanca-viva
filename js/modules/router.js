@@ -15,17 +15,27 @@ const rotas = {
   "/cadastro": () => tpl.paginaCadastro(listar()),
 };
 
+const titulos = { "/": "Início", "/projetos": "Projetos", "/cadastro": "Cadastro" };
+let primeiraRenderizacao = true;
+
 export function renderizar() {
   const rota = location.hash.slice(1) || "/";
-  const pagina = rotas[rota] ?? (() => "<h1>Página não encontrada</h1>");
+  const pagina = rotas[rota] ?? tpl.paginaNaoEncontrada;
+  const titulo = titulos[rota] ?? "Página não encontrada";
   const app = document.getElementById("app");
   app.innerHTML = pagina();
-  document.title = `${rota === "/" ? "Início" : rota.slice(1)} | ONG Esperança Viva`;
+  document.title = `${titulo} | ONG Esperança Viva`;
   document.querySelectorAll("[data-rota]").forEach((a) => {
     if (a.dataset.rota === rota) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
   });
-  app.focus();
+  // Na carga inicial o foco fica no início do documento (para o link "pular" funcionar);
+  // nas trocas de página o foco vai ao conteúdo e o leitor de tela anuncia o título.
+  if (!primeiraRenderizacao) {
+    app.focus();
+    document.getElementById("anuncio").textContent = `Página ${titulo}`;
+  }
+  primeiraRenderizacao = false;
   ligarFormulario();
 }
 

@@ -15,6 +15,7 @@
   --cor-texto: #1f2933;
   --cor-texto-suave: #4b5563;
   --cor-borda: #c9d1d9;
+  --cor-borda-campo: #6b7280; /* 4,8:1 sobre branco: borda de campo precisa de 3:1 (WCAG 1.4.11) */
   --cor-fundo: #f5f7fa;
   --cor-branco: #ffffff;
   --cor-sombra: rgba(20, 63, 115, 0.15);
@@ -59,7 +60,7 @@ img { max-width: 100%; height: auto; }
 a { color: var(--cor-primaria); }
 a:focus-visible, button:focus-visible, input:focus-visible,
 select:focus-visible, textarea:focus-visible {
-  outline: 3px solid var(--cor-secundaria);
+  outline: 3px solid var(--cor-secundaria-escura); /* 4,9:1 sobre o fundo (WCAG 1.4.11) */
   outline-offset: 2px;
 }
 
@@ -233,12 +234,13 @@ select:focus-visible, textarea:focus-visible {
 .campo label { font-weight: var(--peso-forte); }
 .campo input, .campo select, .campo textarea {
   padding: var(--esp-1) var(--esp-2);
-  border: 2px solid var(--cor-borda);
+  border: 2px solid var(--cor-borda-campo);
   border-radius: var(--raio);
   font: inherit;
   transition: border-color var(--transicao), box-shadow var(--transicao);
 }
 .campo input:focus, .campo select:focus, .campo textarea:focus { border-color: var(--cor-primaria); box-shadow: 0 0 0 3px var(--cor-primaria-clara); }
+.cabecalho a:focus-visible, .rodape a:focus-visible { outline-color: var(--cor-branco); }
 .campo input:user-invalid { border-color: var(--cor-erro); }
 .campo input:user-valid { border-color: var(--cor-sucesso); }
 .campo__ajuda { font-size: var(--fonte-xs); color: var(--cor-texto-suave); }
@@ -313,3 +315,58 @@ select:focus-visible, textarea:focus-visible {
 .campo input[aria-invalid="true"] { border-color: var(--cor-erro); }
 .contador { font-weight: var(--peso-forte); }
 .campo input[aria-invalid="false"] { border-color: var(--cor-sucesso); }
+
+/* ===== Acessibilidade (WCAG 2.1 AA) ===== */
+.pular-link {
+  position: absolute; left: var(--esp-2); top: -4rem; z-index: 100;
+  padding: var(--esp-1) var(--esp-2);
+  background: var(--cor-branco); color: var(--cor-primaria-escura);
+  border: 3px solid var(--cor-secundaria-escura); border-radius: var(--raio);
+  font-weight: var(--peso-forte);
+}
+.pular-link:focus { top: var(--esp-2); }
+/* o erro não depende só da cor: ganha o prefixo "Erro:" */
+.campo__erro:not(:empty)::before { content: "Erro: "; font-weight: var(--peso-forte); }
+/* alvos de toque com no mínimo 44 x 44 px */
+.btn, .menu a { min-height: 44px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline-offset: 3px; }
+@media (forced-colors: active) {
+  .btn, .campo input { border: 2px solid ButtonText; }
+  .toast { border: 2px solid CanvasText; }
+}
+
+/* ===== Modo escuro (segue a preferência do sistema: prefers-color-scheme) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --cor-fundo: #0f1720;
+    --cor-texto: #e8edf2;
+    --cor-texto-suave: #b5c0cc;
+    --cor-borda: #344255;
+    --cor-borda-campo: #8a97a8;
+    --cor-primaria-clara: #1b2f4b;
+    --cor-erro: #ff9a92;
+    --cor-sucesso: #6fd491;
+    --cor-sombra: rgba(0, 0, 0, 0.5);
+  }
+  a { color: #8fbcf2; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline-color: #ffb066; }
+  .cabecalho a:focus-visible, .rodape a:focus-visible, .pular-link:focus-visible { outline-color: var(--cor-branco); }
+  .cabecalho a, .rodape a, .menu a, .btn { color: var(--cor-branco); }
+  .cartao, .formulario, .inscrito { background: #17212d; }
+  .campo input { background: #0f1720; color: var(--cor-texto); }
+  .campo input:focus { border-color: #8fbcf2; box-shadow: 0 0 0 3px #1b2f4b; }
+  .hero { background: #16263d; }
+  .badge { background: #1b2f4b; color: #cfe3fb; }
+  .btn--contorno { color: #8fbcf2; border-color: #8fbcf2; }
+  .btn--contorno:hover { color: var(--cor-branco); }
+  .toast { background: #243244; color: var(--cor-branco); }
+  .pular-link { color: var(--cor-primaria-escura); }
+}
+
+/* ===== Hero com imagem otimizada ===== */
+.hero { display: grid; gap: var(--esp-3); align-items: center; padding-left: var(--esp-3); padding-right: var(--esp-3); border-radius: var(--raio); }
+.hero__imagem { width: 100%; height: auto; border-radius: var(--raio); display: block; }
+@media (min-width: 768px) {
+  .hero { grid-template-columns: 1fr 400px; }
+}

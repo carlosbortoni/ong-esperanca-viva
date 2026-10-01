@@ -4,25 +4,40 @@ const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 export const cartaoProjeto = ({ titulo, descricao, status }) => `
   <article class="cartao col-4">
     <div class="cartao__corpo">
-      <span class="badge">${esc(status)}</span>
-      <h3 class="cartao__titulo">${esc(titulo)}</h3>
+      <span class="badge"><span class="visualmente-oculto">Situação: </span>${esc(status)}</span>
+      <h2 class="cartao__titulo">${esc(titulo)}</h2>
       <p>${esc(descricao)}</p>
-      <a class="btn cartao__acao" href="#/cadastro">Participar</a>
+      <a class="btn cartao__acao" href="#/cadastro" aria-label="Participar do projeto ${esc(titulo)}">Participar</a>
     </div>
   </article>`;
 
 export const itemInscrito = ({ id, nome, email }) => `
   <li class="inscrito">
     <span><strong>${esc(nome)}</strong><br><small>${esc(email)}</small></span>
-    <button class="btn btn--contorno" type="button" data-remover="${id}">Remover</button>
+    <button class="btn btn--contorno" type="button" data-remover="${id}" aria-label="Remover cadastro de ${esc(nome)}">Remover</button>
   </li>`;
+
+// Imagens otimizadas (WebP responsivo + JPEG de reserva). O Vite reescreve estas URLs no build.
+const imgWebp400 = new URL("../../imagens/otimizadas/equipe-400.webp", import.meta.url).href;
+const imgWebp800 = new URL("../../imagens/otimizadas/equipe-800.webp", import.meta.url).href;
+const imgJpg800 = new URL("../../imagens/otimizadas/equipe-800.jpg", import.meta.url).href;
 
 export const paginaInicio = (total) => `
   <section class="hero">
-    <h1>Transformando vidas com educação e cidadania</h1>
-    <p>Já temos <span class="contador" id="contador">${total}</span> apoiadores cadastrados.</p>
-    <a class="btn" href="#/cadastro">Quero apoiar</a>
+    <div class="hero__texto">
+      <h1>Transformando vidas com educação e cidadania</h1>
+      <p>Já temos <span class="contador" id="contador">${total}</span> apoiadores cadastrados.</p>
+      <a class="btn" href="#/cadastro">Quero apoiar</a>
+    </div>
+    <picture>
+      <source type="image/webp" srcset="${imgWebp400} 400w, ${imgWebp800} 800w" sizes="(min-width: 768px) 400px, 100vw">
+      <img class="hero__imagem" src="${imgJpg800}" alt="" width="800" height="400" decoding="async" fetchpriority="high">
+    </picture>
   </section>`;
+
+export const paginaNaoEncontrada = () => `
+  <h1>Página não encontrada</h1>
+  <p>O endereço acessado não existe. <a href="#/">Voltar para o início</a>.</p>`;
 
 export const paginaProjetos = (projetos) => `
   <h1>Nossos projetos</h1>
@@ -31,27 +46,29 @@ export const paginaProjetos = (projetos) => `
 export const paginaCadastro = (inscritos) => `
   <h1>Seja um apoiador</h1>
   <div class="grid">
-    <form class="formulario col-6" id="form-cadastro" novalidate>
+    <form class="formulario col-6" id="form-cadastro" novalidate aria-describedby="ajuda-form">
+      <p class="campo__ajuda" id="ajuda-form">Campos marcados com * são obrigatórios.</p>
       <div class="campo">
         <label for="nome">Nome completo *</label>
-        <input type="text" id="nome" name="nome" autocomplete="name">
-        <span class="campo__erro" id="erro-nome" role="alert"></span>
+        <input type="text" id="nome" name="nome" autocomplete="name" required aria-required="true" aria-describedby="erro-nome">
+        <span class="campo__erro" id="erro-nome" ></span>
       </div>
       <div class="campo">
         <label for="email">E-mail *</label>
-        <input type="email" id="email" name="email" autocomplete="email">
-        <span class="campo__erro" id="erro-email" role="alert"></span>
+        <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" aria-describedby="erro-email">
+        <span class="campo__erro" id="erro-email" ></span>
       </div>
       <div class="campo">
         <label for="telefone">Telefone *</label>
-        <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel">
-        <span class="campo__erro" id="erro-telefone" role="alert"></span>
+        <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" autocomplete="tel" inputmode="tel" required aria-required="true" aria-describedby="ajuda-telefone erro-telefone">
+        <span class="campo__ajuda" id="ajuda-telefone">Formato: (00) 00000-0000</span>
+        <span class="campo__erro" id="erro-telefone" ></span>
       </div>
       <button class="btn" type="submit">Enviar cadastro</button>
     </form>
     <section class="col-6" aria-labelledby="titulo-lista">
-      <h2 id="titulo-lista">Apoiadores cadastrados</h2>
-      <ul class="lista-inscritos" id="lista-inscritos">${inscritos.map(itemInscrito).join("")}</ul>
+      <h2 id="titulo-lista" tabindex="-1">Apoiadores cadastrados</h2>
+      <ul class="lista-inscritos" id="lista-inscritos" aria-label="Lista de apoiadores cadastrados">${inscritos.map(itemInscrito).join("")}</ul>
     </section>
   </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>`;
