@@ -363,3 +363,10 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline-offset: 3px
   .toast { background: #243244; color: var(--cor-branco); }
   .pular-link { color: var(--cor-primaria-escura); }
 }
+
+/* ===== Hero com imagem otimizada ===== */
+.hero { display: grid; gap: var(--esp-3); align-items: center; padding-left: var(--esp-3); padding-right: var(--esp-3); border-radius: var(--raio); }
+.hero__imagem { width: 100%; height: auto; border-radius: var(--raio); display: block; }
+@media (min-width: 768px) {
+  .hero { grid-template-columns: 1fr 400px; }
+}

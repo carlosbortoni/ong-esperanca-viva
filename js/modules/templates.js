@@ -17,11 +17,22 @@ export const itemInscrito = ({ id, nome, email }) => `
     <button class="btn btn--contorno" type="button" data-remover="${id}" aria-label="Remover cadastro de ${esc(nome)}">Remover</button>
   </li>`;
 
+// Imagens otimizadas (WebP responsivo + JPEG de reserva). O Vite reescreve estas URLs no build.
+const imgWebp400 = new URL("../../imagens/otimizadas/equipe-400.webp", import.meta.url).href;
+const imgWebp800 = new URL("../../imagens/otimizadas/equipe-800.webp", import.meta.url).href;
+const imgJpg800 = new URL("../../imagens/otimizadas/equipe-800.jpg", import.meta.url).href;
+
 export const paginaInicio = (total) => `
   <section class="hero">
-    <h1>Transformando vidas com educação e cidadania</h1>
-    <p>Já temos <span class="contador" id="contador">${total}</span> apoiadores cadastrados.</p>
-    <a class="btn" href="#/cadastro">Quero apoiar</a>
+    <div class="hero__texto">
+      <h1>Transformando vidas com educação e cidadania</h1>
+      <p>Já temos <span class="contador" id="contador">${total}</span> apoiadores cadastrados.</p>
+      <a class="btn" href="#/cadastro">Quero apoiar</a>
+    </div>
+    <picture>
+      <source type="image/webp" srcset="${imgWebp400} 400w, ${imgWebp800} 800w" sizes="(min-width: 768px) 400px, 100vw">
+      <img class="hero__imagem" src="${imgJpg800}" alt="" width="800" height="400" decoding="async" fetchpriority="high">
+    </picture>
   </section>`;
 
 export const paginaNaoEncontrada = () => `
