@@ -29,7 +29,8 @@ Branch: `feature/acessibilidade` · Issue: #2 · Milestone: v1.0.0
 - Foco visível com contorno de 3 px em `#a85508` (4,9:1) e em branco sobre cabeçalho e rodapé.
 - Borda dos campos de `#c9d1d9` (1,54:1) para `#6b7280` (4,8:1), atendendo o critério 1.4.11 (componentes de interface, mínimo 3:1).
 - Erros não dependem só de cor: ganham o prefixo "Erro:".
-- `prefers-reduced-motion` e `forced-colors` (alto contraste do sistema) respeitados.
+- `prefers-reduced-motion` respeitado e `forced-colors` (alto contraste do sistema operacional) tratado em CSS.
+- Modo escuro automático via `@media (prefers-color-scheme: dark)`: as cores de superfície, texto, links, foco, bordas e erros são redefinidas por variáveis CSS e regras pontuais, sem JavaScript e sem botão de alternância (segue a preferência do sistema).
 
 ## Testes e resultados
 
@@ -54,6 +55,24 @@ Branch: `feature/acessibilidade` · Issue: #2 · Milestone: v1.0.0
 | Erro / branco | 6,54:1 |
 | Foco / fundo | 4,93:1 |
 | Borda de campo / branco | 4,83:1 |
+
+### Modo escuro
+
+Ferramenta: axe-core (regra `color-contrast`) com `colorScheme: dark` no Playwright, mais cálculo da razão de luminância WCAG (cores lidas com `getComputedStyle`).
+
+| Elemento (texto / fundo) | Cores | Razão |
+|---|---|---|
+| Título e texto | `#e8edf2` / `#0f1720` | 15,32:1 |
+| Rótulo de campo | `#e8edf2` / `#17212d` | 13,80:1 |
+| Ajuda (texto suave) | `#b5c0cc` / `#17212d` | 8,81:1 |
+| Mensagem de erro | `#ff9a92` / `#17212d` | 7,96:1 |
+| Link | `#8fbcf2` / `#0f1720` | 9,15:1 |
+| Badge | `#cfe3fb` / `#1b2f4b` | 10,31:1 |
+| Toast | `#ffffff` / `#243244` | 13,01:1 |
+| Foco (componente) | `#ffb066` / `#17212d` | 9,02:1 |
+| Borda de campo (componente) | `#8a97a8` / `#17212d` | 5,47:1 |
+
+O axe também retornou 0 violações nas 4 rotas, em 1280 px e 375 px, com o modo escuro ativo.
 
 ## Limitações
 

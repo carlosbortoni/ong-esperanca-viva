@@ -334,3 +334,32 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline-offset: 3px
   .btn, .campo input { border: 2px solid ButtonText; }
   .toast { border: 2px solid CanvasText; }
 }
+
+/* ===== Modo escuro (segue a preferência do sistema: prefers-color-scheme) ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --cor-fundo: #0f1720;
+    --cor-texto: #e8edf2;
+    --cor-texto-suave: #b5c0cc;
+    --cor-borda: #344255;
+    --cor-borda-campo: #8a97a8;
+    --cor-primaria-clara: #1b2f4b;
+    --cor-erro: #ff9a92;
+    --cor-sucesso: #6fd491;
+    --cor-sombra: rgba(0, 0, 0, 0.5);
+  }
+  a { color: #8fbcf2; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline-color: #ffb066; }
+  .cabecalho a:focus-visible, .rodape a:focus-visible, .pular-link:focus-visible { outline-color: var(--cor-branco); }
+  .cabecalho a, .rodape a, .menu a, .btn { color: var(--cor-branco); }
+  .cartao, .formulario, .inscrito { background: #17212d; }
+  .campo input { background: #0f1720; color: var(--cor-texto); }
+  .campo input:focus { border-color: #8fbcf2; box-shadow: 0 0 0 3px #1b2f4b; }
+  .hero { background: #16263d; }
+  .badge { background: #1b2f4b; color: #cfe3fb; }
+  .btn--contorno { color: #8fbcf2; border-color: #8fbcf2; }
+  .btn--contorno:hover { color: var(--cor-branco); }
+  .toast { background: #243244; color: var(--cor-branco); }
+  .pular-link { color: var(--cor-primaria-escura); }
+}
