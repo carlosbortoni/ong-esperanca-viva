@@ -40,9 +40,15 @@ export function ligarFormulario() {
       if (erro) valido = false;
       dados[campo.name] = campo.value.trim();
     }
-    if (!valido) return;
+    if (!valido) {
+      const invalidos = form.querySelectorAll('[aria-invalid="true"]');
+      document.getElementById("anuncio").textContent = `O formulário tem ${invalidos.length} ${invalidos.length === 1 ? "campo com erro" : "campos com erro"}.`;
+      invalidos[0].focus();
+      return;
+    }
     if (listar().some((i) => i.email.toLowerCase() === dados.email.toLowerCase())) {
       mostrarErro(form.elements.email, "Este e-mail já está cadastrado.");
+      form.elements.email.focus();
       return;
     }
     salvar(dados);
@@ -54,10 +60,11 @@ export function ligarFormulario() {
   });
 
   document.getElementById("lista-inscritos").addEventListener("click", (e) => {
-    const id = e.target.dataset.remover;
+    const id = e.target.closest("[data-remover]")?.dataset.remover;
     if (!id) return;
     remover(Number(id));
     desenharLista();
+    document.getElementById("titulo-lista").focus(); // o botão clicado deixou de existir
     avisar("Cadastro removido.");
   });
 }
